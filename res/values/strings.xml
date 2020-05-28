@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Create A Notification</string>
+    <string name="notification_title">TextView</string>
+    <string name="topics_image">topics_image</string>
+    <string name="title">"Title: "</string>
+    <string name="test123">test123</string>
+    <string name="create_notification">Create A Notification</string>
+    <string name="Date">"Date: "</string>
+    <string name="UploadImage">"Upload An Image: "</string>
+    <string name="choosefile">ChooseFile</string>
+    <string name="post">Post</string>
+    <string name="content">Content:</string>
+    <string name="channel_name">Channel1</string>
+    <string name="channel_description">Channel_Description</string>
+</resources>
