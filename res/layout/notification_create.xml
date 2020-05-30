@@ -108,6 +108,7 @@
         android:id="@+id/preview_upload_image"
         android:layout_width="200dp"
         android:layout_height="110dp"
+        app:srcCompat="@drawable/misso_solution1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_upload_image" />

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Create A Notification</string>
+    <string name="app_name">Fantastic School</string>
     <string name="notification_title">TextView</string>
     <string name="topics_image">topics_image</string>
     <string name="title">"Title: "</string>
@@ -12,4 +12,12 @@
     <string name="content">Content:</string>
     <string name="channel_name">Channel1</string>
     <string name="channel_description">Channel_Description</string>
+    <string name="location">Location</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="create_an_event">Create An Event</string>
+    <string name="add">Add</string>
+    <string name="add_event">Add Event</string>
+    <string name="event_list_bar">Event List</string>
+    <string name="no_event">No Event</string>
 </resources>
