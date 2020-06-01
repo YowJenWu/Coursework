@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="horizontal">
+
     <LinearLayout
         android:id="@+id/event_list_view"
         android:layout_width="match_parent"
