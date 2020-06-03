@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context=".MessageSend">
+
+    <TextView
+        android:id="@+id/msg_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:text="Choose the Target Message Receiver:"
+        android:textSize="22dp"
+        android:textColor="#669e94"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/msg_question1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1"
+        android:text="Identity "
+        android:textSize="22dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/msg_question" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup_Identity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintStart_toEndOf="@+id/msg_question1"
+        app:layout_constraintTop_toBottomOf="@id/msg_question">
+        <RadioButton
+            android:id="@+id/Student"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Student" />
+
+        <RadioButton
+            android:id="@+id/Parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parent" />
+
+        <RadioButton
+            android:id="@+id/StudentAndParent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Student And Parent" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/msg_question2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1"
+        android:text="Group "
+        android:textSize="22dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radioGroup_Identity" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup_Group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintStart_toStartOf="@id/radioGroup_Identity"
+        app:layout_constraintTop_toBottomOf="@id/radioGroup_Identity"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/Year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Year" />
+
+        <RadioButton
+            android:id="@+id/Class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="34dp"
+            android:text="Class" />
+
+        <RadioButton
+            android:id="@+id/Individual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:text="Individual" />
+    </RadioGroup>
+
+    <Spinner
+        android:id="@+id/spinner_Year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="@+id/radioGroup_Group"
+        app:layout_constraintTop_toBottomOf="@id/msg_question2"/>
+    <Spinner
+        android:id="@+id/spinner_Class"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="14dp"
+        app:layout_constraintStart_toEndOf="@+id/spinner_Year"
+        app:layout_constraintTop_toBottomOf="@id/msg_question2"/>
+    <Spinner
+        android:id="@+id/spinner_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="14dp"
+        app:layout_constraintStart_toEndOf="@+id/spinner_Class"
+        app:layout_constraintTop_toBottomOf="@id/msg_question2"/>
+
+    <TextView
+        android:id="@+id/msg_cre_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/content"
+        android:textSize="22dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_Year" />
+
+    <EditText
+        android:id="@+id/msg_cre_content_inp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_send"
+        app:layout_constraintTop_toBottomOf="@+id/msg_cre_content"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/button_send"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/colorPrimary"
+        android:text="Send"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

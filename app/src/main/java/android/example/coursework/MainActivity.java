@@ -1,115 +1,175 @@
 package android.example.coursework;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.IOException;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends Activity implements OnClickListener {
-
-    private TextView notif_cre_tit, notif_cre_date, notif_cre_img, notif_cre_content;
-    private EditText notif_cre_tit_inp, notif_cre_date_inp, notif_cre_content_inp;
-    private Button button_upload_image, button_submit;
-    private ImageView preview_upload_image;
-
-    private String imagepath=null;
-
+public class MainActivity extends AppCompatActivity {
+    EditText mUsername;
+    EditText mPassword;
+    Button mLoginBtn;
+    TextView mTextViewRegister;
+    public String identity;
+    DatabaseHelper myDB;
+    GlobalVariable gv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notification_create);
+        setContentView(R.layout.activity_main);
+        mUsername = (EditText)findViewById(R.id.username_txt);
+        mPassword = (EditText)findViewById(R.id.pswd_txt);
+        mLoginBtn = (Button)findViewById(R.id.login_btn);
+        mTextViewRegister = (TextView)findViewById(R.id.register_btn);
+        final RadioGroup rg = (RadioGroup) findViewById(R.id.identityGroup);
+        myDB = new DatabaseHelper(this);
+        gv = (GlobalVariable)getApplicationContext();
 
-        //Connect variables to the layout
-        notif_cre_tit  = (TextView)findViewById(R.id.notif_cre_tit);
-        notif_cre_date = (TextView)findViewById(R.id.notif_cre_date);
-        notif_cre_img = (TextView)findViewById(R.id.notif_cre_img);
-        notif_cre_content = (TextView)findViewById(R.id.notif_cre_content);
+        mLoginBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // Get the checked Radio Button ID from Radio Group
+                int selectedRadioButtonID = rg.getCheckedRadioButtonId();
+                String username = mUsername.getText().toString();
+                String password = mPassword.getText().toString();
 
-        preview_upload_image = (ImageView)findViewById(R.id.preview_upload_image);
-
-        button_upload_image = (Button)findViewById(R.id.button_upload_image);
-        button_submit = (Button)findViewById(R.id.button_submit);
-
-        //Setting onClickListener for buttons
-        button_upload_image.setOnClickListener(this);
-        button_submit.setOnClickListener(this);
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        //If user clicks the choosefile botton
-        if (v == button_upload_image){
-            //Triggered the photos on the phone to choose the image to upload
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-
-            //Use Override onActivityResult to process the result after image uploading。
-            startActivityForResult(Intent.createChooser(intent, "Complete action using"), 1);
-        }
-
-        //If user clicks the post botton
-        else if (v == button_submit){
-
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Actions to do after user picked an image
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data!= null) {
-            Uri selectedImageUri = data.getData();
-
-            imagepath = getPath(selectedImageUri);
-            Log.d("PATH", selectedImageUri.getPath());
-            Log.d("PATH2", imagepath);
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2;
-            //依相片的路徑，轉成Bitmap的型態，在ImageView，顯示出選取的相片。
-            try {
-                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imagepath));
-                //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 80, true);
-                preview_upload_image.setImageBitmap(bitmap);
-                if (bitmap != null) {
-                    preview_upload_image = (ImageView) findViewById(R.id.preview_upload_image);
+                // If nothing is selected from Radio Group, then it return -1
+                if (selectedRadioButtonID != -1) {
+                    RadioButton selectedRadioButton = (RadioButton) findViewById(selectedRadioButtonID);
+                    identity = selectedRadioButton.getText().toString();
                 }
-                else{
-                    Log.d("PATH", "Fail_To_Get_Image!!!");
+                if (username.equals("admin") && password.equals("admin_pswd") && identity.equals("Admin")) {
+                    //After login success, go to dashboard
+                    Intent intent = new Intent(MainActivity.this, Homepage.class);
+                    gv.setIdentity("Admin");
+                    gv.setUsername(username);
+//                    Intent intent = new Intent(MainActivity.this, StudentListActivity.class);
+                    intent.putExtra("IDENTITY", identity);
+                    startActivity(intent);
+                } else if (identity.equals("Student")) {
+                    Cursor regis_stu_data = myDB.getRegisStuContents();
+                    if(regis_stu_data.getCount() == 0) {
+                        Toast.makeText(MainActivity.this, "Please registered first!", Toast.LENGTH_LONG).show();
+                    } else {
+                        while(regis_stu_data.moveToNext()) {
+                            String stu_username = regis_stu_data.getString(1);
+                            String stu_password = regis_stu_data.getString(2);
+                            if(username.equals(stu_username) && password.equals(stu_password)){
+                                //After login success, go to dashboard
+                                Intent studentRegister = new Intent(MainActivity.this, Homepage.class);
+//                                Intent studentRegister = new Intent(MainActivity.this, AddStudentActivity.class);
+                                gv.setIdentity(identity);
+                                gv.setUsername(username);
+                                studentRegister.putExtra("IDENTITY", identity);
+                                studentRegister.putExtra("USERNAME", username);
+                                startActivity(studentRegister);
+                                break;
+                            } else {
+                                Toast.makeText(MainActivity.this, "Your username or password is incorrect!", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                    }
+                } else if (identity.equals("Parent")) {
+                    Cursor parent_data = myDB.getParentContents();
+                    if(parent_data.getCount() == 0) {
+                        Toast.makeText(MainActivity.this, "Please registered first!", Toast.LENGTH_LONG).show();
+                    } else {
+                        while(parent_data.moveToNext()) {
+                            String par_username = Integer.toString(parent_data.getInt(0));
+                            if (username.substring(0,1).equals("0")) {
+                                par_username = "0" + par_username;
+                            }
+                            String par_password = parent_data.getString(1);
+                            if(username.equals(par_username) && password.equals(par_password)) {
+                                //After login success, go to dashboard
+                                Intent parentLogin = new Intent(MainActivity.this, Homepage.class);
+                                gv.setIdentity(identity);
+                                gv.setUsername(username);
+//                                Intent parentLogin = new Intent(MainActivity.this, AddStudentActivity.class);
+                                parentLogin.putExtra("IDENTITY", identity);
+                                parentLogin.putExtra("USERNAME", username);
+                                startActivity(parentLogin);
+                                break;
+                            } else {
+                                Toast.makeText(MainActivity.this, "Your username or password is incorrect!", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
                 }
-            }catch(IOException ie) {
-                Log.d("PATH", ie);
+
             }
-        }
-        else{
+        });
 
-        }
-    }
-    public String getPath(Uri uri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        cursor.moveToFirst();
-        int column_index = cursor.getColumnIndexOrThrow(projection[0]);
-        String picturePath = cursor.getString(column_index);
-        cursor.close();
-        return picturePath;
     }
 
+    public void register_action(View v) {
+        mUsername = (EditText)findViewById(R.id.username_txt);
+        mPassword = (EditText)findViewById(R.id.pswd_txt);
+        String username = mUsername.getText().toString();
+        String password = mPassword.getText().toString();
+        final RadioGroup rg = (RadioGroup) findViewById(R.id.identityGroup);
+        int selectedRadioButtonID = rg.getCheckedRadioButtonId();
+        // If nothing is selected from Radio Group, then it return -1
+        if (selectedRadioButtonID != -1) {
+            RadioButton selectedRadioButton = (RadioButton) findViewById(selectedRadioButtonID);
+            identity = selectedRadioButton.getText().toString();
+        }
+        if (identity.equals("Student")) { //Student Register
+            Cursor data = myDB.getStuListContents();
+            if(data.getCount() == 0) {
+                Toast.makeText(MainActivity.this, "Please contact Admin!", Toast.LENGTH_LONG).show();
+            } else {
+                while(data.moveToNext()) {
+                    String stu_username = data.getString(1);
+                    if(username.equals(stu_username)){
+                        Intent studentRegister = new Intent(MainActivity.this, AddStudentActivity.class);
+                        studentRegister.putExtra("IDENTITY", identity);
+                        studentRegister.putExtra("USERNAME", username);
+                        studentRegister.putExtra("PASSWORD", password);
+                        startActivity(studentRegister);
+                        break;
+                    }
+                }
+            }
+
+        } else if (identity.equals("Parent")) { //Parent Register
+            Cursor data = myDB.getRegisStuContents();
+            if(data.getCount() == 0) {
+                Toast.makeText(MainActivity.this, "Please contact Admin!", Toast.LENGTH_LONG).show();
+            } else {
+                while(data.moveToNext()) {
+                    String parent_number = data.getString(7);
+                    if(username.equals(parent_number)){
+                        if(username.length() != 0 && password.length() != 0) {
+                            int phone = 0;
+                            try {
+                                phone = Integer.parseInt(username);
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(MainActivity.this, "Please contact Admin!", Toast.LENGTH_LONG).show();
+                            }
+                            boolean insertData = myDB.addParentData(phone, password);
+                            if(insertData == true) {
+                                Toast.makeText(MainActivity.this, "Successfully Register! You can login now.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Something went wrong!", Toast.LENGTH_LONG).show();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+    }
 }
